@@ -1,10 +1,8 @@
 package com.ahmed.littlelemon
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.widget.Button
 import android.widget.TextView
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 
 
@@ -39,19 +38,20 @@ fun Profile(navController: NavController){
         modifier = Modifier
             .background(color = colorResource(R.color.white))
     ){
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding( 10.dp)
-                .height(40.dp),
-            painter = painterResource(R.drawable.logo),
-            contentDescription = "logo"
-        )
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
         )
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+
+                .height(50.dp),
+            painter = painterResource(R.drawable.logo),
+            contentDescription = "logo"
+        )
+
         Text(
             text = "Personal information",
             textAlign = Start,
@@ -104,15 +104,36 @@ fun Profile(navController: NavController){
                 .height(70.dp)
         )
 
-        CustomLogOutButton(context, "Log out", onClick = {
-            // Clear the navigation stack and return to the Onboarding screen
-            navController.navigate("Onboarding")
-            {
-                popUpTo(navController.graph.findStartDestination().id){
-                    inclusive = true
+        Button(
+            onClick = {
+                // Clear the navigation stack and return to the Onboarding screen
+                val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    clear()
+                    apply()
                 }
-            }
-        })
+                // navigate to Onboarding screen
+                navController.navigate(Onboarding.route)
+                {
+                    popUpTo(navController.graph.startDestinationId){
+                        inclusive = true
+                    }
+                }
+            },
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.yellow),
+                contentColor = colorResource(R.color.black),
+            ),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, colorResource(R.color.red)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .padding(start = 20.dp, end = 20.dp)
+
+        ) {
+            Text(text = "Logout")
+        }
 
         Spacer(
             modifier = Modifier
@@ -120,34 +141,12 @@ fun Profile(navController: NavController){
                 .height(20.dp)
         )
     }
-
-}
-
-@SuppressLint("SuspiciousIndentation")
-@Composable
-fun CustomLogOutButton(context: Context, text: String, onClick: () -> Unit) {
-    AndroidView(
-        factory = { ctx ->
-            Button(context).apply{
-                val drawable : Drawable? = ctx.getDrawable(R.drawable.button)
-            background = drawable
-                setText(text)
-                isAllCaps = false
-                setOnClickListener { onClick() }
-            }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp)
-    )
 }
 
 fun getStoredValues(context: Context, key : String, defaultValue : String) : String{
     val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
     return sharedPreferences.getString(key, defaultValue) ?: defaultValue
 }
-
 
 @Composable
 fun CustomText(text : String) {
@@ -157,13 +156,13 @@ fun CustomText(text : String) {
                 setText(text)
                 background = it.getDrawable(R.drawable.textfieldshape)
                 textSize = 16f
-                setPadding(20,10,20,10)
+                setPadding(20,15,20,10)
             }
             textView
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 5.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
             .height(35.dp)
     )
 }
@@ -171,7 +170,6 @@ fun CustomText(text : String) {
 @Preview(showBackground = true)
 @Composable
 fun ProfilePreview(){
-
     val navController = rememberNavController()
     Profile(navController)
 }

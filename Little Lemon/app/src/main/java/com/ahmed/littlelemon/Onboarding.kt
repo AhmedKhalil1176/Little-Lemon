@@ -1,10 +1,9 @@
 package com.ahmed.littlelemon
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -77,7 +78,6 @@ fun Onboarding(navController: NavController){
             )
         }
 
-
         Text(
             text = "Personal information",
             textAlign = Start,
@@ -130,23 +130,40 @@ fun Onboarding(navController: NavController){
                 .fillMaxWidth()
                 .height(70.dp)
         )
-        CustomButton(context, "Register", onClick = {
-            if (firstName.isBlank() || lastName.isBlank() || email.isBlank()) {
-                message = "Registration unsuccessful. Please enter all data."
-            } else {
-                val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE )
-                with(sharedPreferences.edit()) {
-                    putString("firstName", firstName)
-                    putString("lastName", lastName)
-                    putString("email", email)
-                    putBoolean("isRegistered", true)
-                    apply()
+
+        Button(
+            onClick = {
+                if (firstName.isBlank() || lastName.isBlank() || email.isBlank()) {
+                    message = "Registration unsuccessful. Please enter all data."
+                } else {
+                    val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE )
+                    with(sharedPreferences.edit()) {
+                        putString("firstName", firstName)
+                        putString("lastName", lastName)
+                        putString("email", email)
+                        putBoolean("isRegistered", true)
+                        apply()
+                    }
+                    message = "Registration successful!"
+                    navController.navigate(Home.route)
                 }
-                message = "Registration successful!"
-                navController.navigate(Home.route)
-            }
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        })
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            },
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.yellow),
+                contentColor = colorResource(R.color.black),
+            ),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, colorResource(R.color.red)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .padding(start = 20.dp, end = 20.dp)
+
+        ) {
+            Text(text = "Register")
+        }
+
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
@@ -154,25 +171,6 @@ fun Onboarding(navController: NavController){
         )
 
     }
-}
-
-@Composable
-fun CustomButton(context: Context, text: String, onClick: () -> Unit) {
-    AndroidView(
-        factory = {ctx ->
-            Button(context).apply {
-                val drawable : Drawable? = ctx.getDrawable(R.drawable.button)
-                background = drawable
-                setText(text)
-                isAllCaps = false
-                setOnClickListener { onClick() }
-            }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(top = 10.dp, start = 20.dp, end = 20.dp)
-    )
 }
 
 @Composable

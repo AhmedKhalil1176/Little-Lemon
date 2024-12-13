@@ -17,20 +17,19 @@ fun Navigation(navController: NavHostController ) {
     val isRegistered = sharedPreferences.getBoolean("isRegistered", false)
 
     // Determine the start destination based on whether the user is registered
-    val startDestination = if (isRegistered) "Home" else "Onboarding"
+    val startDestination = if (isRegistered) Home.route else Onboarding.route
 
     //Define NavHost with navController passed
     NavHost(navController = navController, startDestination = startDestination) {
-        composable("Onboarding") {
+        composable(Onboarding.route) {
             Onboarding(navController)
         }
-        composable("Home") {
+        composable(Home.route) {
             Home(navController)
         }
-        composable("Profile") {
+        composable(Profile.route) {
             Profile(navController)
         }
-
     }
 }
 

@@ -21,5 +21,5 @@ object Home : Destinations{
 object Profile : Destinations{
     override val route = "Profile"
     override val title = "Profile"
-    override val icon = R.drawable.ic_profile
+    override val icon = R.drawable.profile
 }
