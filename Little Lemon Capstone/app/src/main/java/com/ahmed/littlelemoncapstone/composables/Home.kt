@@ -117,7 +117,6 @@ fun HomePage(navController: NavHostController, menuViewModel: MenuViewModel) {
                             navController.navigate(Profile.route)
                         }
                 )
-
             }
         }
         item{ Spacer(modifier = Modifier.height(16.dp)) }
@@ -126,7 +125,6 @@ fun HomePage(navController: NavHostController, menuViewModel: MenuViewModel) {
         item{ HeroPanel(searchPhrase.value, onSearchPhraseChanged = { searchPhrase.value = it }) }
         item{ Spacer(modifier = Modifier.height(16.dp)) }
 
-//        item{ Spacer(modifier = Modifier.width(16.dp)) }
         // Filtered MenuItems
         val filteredMenuItems = if (searchPhrase.value.isBlank()) {
             databaseMenuItems
@@ -144,8 +142,6 @@ fun HomePage(navController: NavHostController, menuViewModel: MenuViewModel) {
 
         // MenuItems Section
         item{ MenuItems(menuItems = filteredMenuItems, context) }
-
-
     }
 
 }
@@ -162,7 +158,6 @@ fun MenuItems(menuItems: List<MenuItemRoom>, context: Context) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun MenuItem(item: MenuItemRoom, context: Context) {
-
     Column(
         modifier = Modifier.fillMaxWidth()
             .padding(start = 12.dp)
@@ -252,9 +247,8 @@ fun HeroPanel(searchPhrase: String, onSearchPhraseChanged: (String) -> Unit){
                         fontWeight = FontWeight.Bold,
                         color = Cloud,
                         fontFamily = FontFamily(Font(R.font.karla_regular))
-                    ),
-
                     )
+                )
                 Text(
                     text = stringResource(id = R.string.description),
                     style = TextStyle(
@@ -275,7 +269,6 @@ fun HeroPanel(searchPhrase: String, onSearchPhraseChanged: (String) -> Unit){
                     .size(150.dp)
             )
         }
-
         OutlinedTextField(
             value = searchPhrase,
             onValueChange = onSearchPhraseChanged,
@@ -297,7 +290,6 @@ fun HeroPanel(searchPhrase: String, onSearchPhraseChanged: (String) -> Unit){
                 .fillMaxWidth()
                 .height(20.dp)
         )
-
     }
 }
 
@@ -350,7 +342,6 @@ fun MenuBreakdown(categories: List<String>, selectedCategory: String?, onCategor
         thickness = 1.dp,
         color = Grey
     )
-
 }
 
 
